@@ -8,7 +8,7 @@
     "browser": "dist/vstate.min.js",
     "typings": "dist/index.d.ts",
     "scripts": {
-        "dev":"rollup -w -c rollup.config.ts",
+        "dev": "rollup -w -c rollup.config.ts",
         "build": "rollup -c rollup.config.ts"
     },
     "repository": {
