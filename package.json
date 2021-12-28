@@ -1,0 +1,71 @@
+{
+    "name": "vstate",
+    "version": "0.1.0",
+    "description": "A minify local state by using vue composition api",
+    "main": "dist/index.js",
+    "module": "dist/index.es.js",
+    "unpkg": "dist/vstate.min.js",
+    "browser": "dist/vstate.min.js",
+    "typings": "dist/index.d.ts",
+    "scripts": {
+        "dev":"rollup -w -c rollup.config.ts",
+        "build": "rollup -c rollup.config.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fanhaoyuan/vstate.git"
+    },
+    "keywords": [
+        "vue",
+        "state",
+        "store",
+        "vuex",
+        "reactive",
+        "context"
+    ],
+    "author": "Fansy <418536538@qq.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/fanhaoyuan/vstate/issues"
+    },
+    "homepage": "https://github.com/fanhaoyuan/vstate#readme",
+    "gitHooks": {
+        "commit-msg": "cmv",
+        "pre-commit": "lint-staged"
+    },
+    "lint-staged": {
+        "*.{js,ts,md,json,yml}": [
+            "prettier --write"
+        ],
+        "*.{js,ts}": [
+            "eslint"
+        ]
+    },
+    "devDependencies": {
+        "@fansy/commit-msg-validator": "^1.0.0",
+        "@fansy/eslint-config": "^1.0.0",
+        "@fansy/prettier-config": "^1.0.0",
+        "@rollup/plugin-commonjs": "^21.0.1",
+        "@rollup/plugin-node-resolve": "^13.1.1",
+        "@vue/runtime-core": "^3.2.26",
+        "@vue/runtime-dom": "^3.2.26",
+        "esbuild": "^0.14.8",
+        "lint-staged": "^12.1.4",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.62.0",
+        "rollup-plugin-dts": "^4.1.0",
+        "rollup-plugin-esbuild": "^4.8.1",
+        "typescript": "^4.5.4",
+        "vue": "^3.0.0",
+        "yorkie": "^2.0.0"
+    },
+    "peerDependencies": {
+        "@vue/composition-api": "^1.3.0",
+        "vue": "^2.0.0 || >=3.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@vue/composition-api": {
+            "optional": true
+        }
+    }
+}
