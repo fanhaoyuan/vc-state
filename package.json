@@ -1,19 +1,22 @@
 {
-    "name": "vstate",
+    "name": "vc-state",
     "version": "0.1.0",
     "description": "A minify local state by using vue composition api",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
-    "unpkg": "dist/vstate.min.js",
-    "browser": "dist/vstate.min.js",
+    "unpkg": "dist/vc-state.min.js",
+    "browser": "dist/vc-state.min.js",
     "typings": "dist/index.d.ts",
     "scripts": {
         "dev": "rollup -w -c rollup.config.ts",
         "build": "rollup -c rollup.config.ts"
     },
+    "files": [
+        "dist"
+    ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/fanhaoyuan/vstate.git"
+        "url": "git+https://github.com/fanhaoyuan/vc-state.git"
     },
     "keywords": [
         "vue",
@@ -26,9 +29,9 @@
     "author": "Fansy <418536538@qq.com>",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/fanhaoyuan/vstate/issues"
+        "url": "https://github.com/fanhaoyuan/vc-state/issues"
     },
-    "homepage": "https://github.com/fanhaoyuan/vstate#readme",
+    "homepage": "https://github.com/fanhaoyuan/vc-state#readme",
     "gitHooks": {
         "commit-msg": "cmv",
         "pre-commit": "lint-staged"

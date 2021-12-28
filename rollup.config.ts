@@ -33,7 +33,7 @@ export default defineConfig([
                 globals: {
                     vue: 'Vue',
                 },
-                name: 'VState',
+                name: 'VCState',
             },
         ],
     },

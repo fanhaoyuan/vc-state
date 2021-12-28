@@ -1,9 +1,9 @@
-# vstate
+# vc-state
 
 A minify local state by using vue composition api.
 
-[![](https://data.jsdelivr.com/v1/package/npm/vstate/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vstate)
-<a href="https://npmjs.com/package/vstate"><img src="https://img.shields.io/npm/v/vstate.svg" alt="npm package"></a>
+[![](https://data.jsdelivr.com/v1/package/npm/vc-state/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vc-state)
+<a href="https://npmjs.com/package/vc-state"><img src="https://img.shields.io/npm/v/vc-state.svg" alt="npm package"></a>
 
 ## Features
 
@@ -15,17 +15,17 @@ A minify local state by using vue composition api.
 ## Install
 
 ```bash
-$> pnpm add vstate
+$> pnpm add vc-state
 #or with npm
-$> npm install vstate
+$> npm install vc-state
 #or with yarn
-$> yarn add vstate
+$> yarn add vc-state
 ```
 
 with CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/vstate/dist/vstate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vc-state/dist/vc-state.min.js"></script>
 ```
 
 ## Tips
@@ -40,7 +40,7 @@ with CDN
 
 ```ts
 // @/context.ts
-import { createContext } from 'vstate';
+import { createContext } from 'vc-state';
 
 interface AppContext {
     count: number;
@@ -85,7 +85,7 @@ export default defineComponent({
 
 ```ts
 // @/context.ts
-import { createContext } from 'vstate';
+import { createContext } from 'vc-state';
 import { toRefs } from 'vue';
 
 interface AppContext {
