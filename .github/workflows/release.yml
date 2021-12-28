@@ -1,0 +1,47 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - 'v*'
+
+jobs:
+    tag-release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Create GitHub Release By Push Tag
+              uses: Roang-zero1/github-create-release-action@master
+              with:
+                  version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    npm-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 6.20.3
+
+            - name: Use Node.js ${{ matrix.node_version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node_version }}
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Build bundle
+              run: pnpm build
+
+            - name: Set .npmrc file
+              run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+
+            - name: NPM publish
+              run: pnpm publish
+              env:
+                  NPM_TOKEN: ${{secrets.NPM_TOKEN}}
