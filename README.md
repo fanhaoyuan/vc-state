@@ -2,6 +2,9 @@
 
 A minify local state by using vue composition api.
 
+[![](https://data.jsdelivr.com/v1/package/npm/vstate/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vstate)
+<a href="https://npmjs.com/package/vstate"><img src="https://img.shields.io/npm/v/vstate.svg" alt="npm package"></a>
+
 ## Features
 
 -   🔧 Simple api and easy to use
@@ -17,6 +20,12 @@ $> pnpm add vstate
 $> npm install vstate
 #or with yarn
 $> yarn add vstate
+```
+
+with CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/vstate/dist/vstate.min.js"></script>
 ```
 
 ## Tips
