@@ -28,10 +28,6 @@ with CDN
 <script src="https://cdn.jsdelivr.net/npm/vc-state/dist/vc-state.min.js"></script>
 ```
 
-## Tips
-
--   If your application built with `vue2`, you should install [Composition API](https://www.npmjs.com/package/@vue/composition-api) first.
-
 ## Usage
 
 ### Basic
