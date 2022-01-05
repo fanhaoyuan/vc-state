@@ -1,18 +1,17 @@
-import { reactive, UnwrapNestedRefs } from 'vue';
+import { reactive } from 'vue';
+import { State, SetState } from './interfaces';
 
-export type State<K> = UnwrapNestedRefs<K>;
-
-export interface SetState<K> {
-    <T extends keyof K>(key: T, value: K[T]): K[T];
-    (key: Partial<K>): K;
-}
-
-export function useState<K extends Record<string, any>>(initialState: K): [State<K>, SetState<K>] {
+/**
+ * A helper function for set state
+ * @param initialState
+ * @returns
+ */
+export function useState<S extends Record<string, any>>(initialState: S): [State<S>, SetState<S>] {
     const state = reactive(initialState);
 
-    function setState<T extends keyof K>(key: T, value: K[T]): K[T];
-    function setState(key: Partial<K>): K;
-    function setState<T extends keyof K>(key: T | Partial<K>, value?: T[keyof T]) {
+    function setState<K extends keyof S>(key: K, value: S[K]): S[K];
+    function setState(key: Partial<S>): S;
+    function setState<K extends keyof S>(key: K | Partial<S>, value?: S[K]) {
         if (typeof key === 'string') {
             return Object.assign(state, { [key]: value });
         }
