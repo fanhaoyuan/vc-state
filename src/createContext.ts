@@ -1,6 +1,11 @@
 import { h, Fragment, provide, InjectionKey, inject, defineComponent, FunctionalComponent } from 'vue';
 import { Selector, Context } from './interfaces';
 
+/**
+ * Compose context with hooks
+ * @param useValue function for init context state
+ * @param selectors hooks with context
+ */
 export function createContext<Props extends {}, Value extends Record<string, any>, Selectors extends Selector<Value>[]>(
     useValue: (props: Props) => Value,
     ...selectors: Selectors
