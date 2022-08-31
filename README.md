@@ -1,28 +1,28 @@
-# vc-state
+<div align="center">
+<h1>vc-state</h1>
 
-A minify local state by using vue composition api.
+Managing context by using composable api
 
 [![](https://data.jsdelivr.com/v1/package/npm/vc-state/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vc-state)
 <a href="https://npmjs.com/package/vc-state"><img src="https://img.shields.io/npm/v/vc-state.svg" alt="npm package"></a>
 
-## Features
-
--   🔧 Simple api and easy to use
--   ⚡️ Fast and light weight (less than **1kb**)
--   🔑 Typescript supported
--   💨 Free combination hooks, written entirely in composition api
+</div>
 
 ## Install
 
+### NPM
+
 ```bash
-$> pnpm add vc-state
-#or with npm
-$> npm install vc-state
-#or with yarn
-$> yarn add vc-state
+>$ npm install vc-state
+
+# or using yarn
+>$ yarn install vc-state
+
+# or using pnpm
+>$ pnpm add vc-state
 ```
 
-with CDN
+### CDN
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/vc-state/dist/vc-state.min.js"></script>
@@ -32,136 +32,149 @@ with CDN
 
 ### Basic
 
-1. Create a custom context.
-
-```ts
-// @/context.ts
+```tsx
+import { defineComponent } from 'vue';
 import { createContext } from 'vc-state';
 
-interface AppContext {
-    count: number;
+function useCounter() {
+    const state = reactive({
+        count: 0,
+    });
+
+    const add = () => state.count++;
+
+    const minus = () => state.count--;
+
+    return {
+        state,
+        add,
+        minus,
+    };
 }
 
-const initialContext: AppContext = {
-    count: 0,
-};
+const [ContextProvider, useContext] = createContext(useCounter);
 
-// You can rename by yourself.
-const [appContext, useAppContext] = createContext(initialContext);
-
-export { appContext, useAppContext };
-```
-
-2. Use custom context in vue component.
-
-```tsx
-// Component.tsx
-import { defineComponent, toRefs } from 'vue';
-import { useAppContext } from '@/context';
-
-export default defineComponent({
+const AddButton = defineComponent({
+    name: 'AddButton',
     setup() {
-        const { context: appContext } = useAppContext();
+        const { add } = useContext();
 
-        //If want to use a ref value, use `toRefs` to transform context.
-        //You can watch or watchEffect `count` now.
-        const { count } = toRefs(appContext);
+        return () => <button onClick={add}>add</button>;
+    },
+});
 
-        return () => {
-            return <div>{appContext.count}</div>;
-            //return <div>{count.value}</div>
-        };
+const MinusButton = defineComponent({
+    name: 'MinusButton',
+    setup() {
+        const { minus } = useContext();
+
+        return () => <button onClick={minus}>minus</button>;
+    },
+});
+
+const Counter = defineComponent({
+    name: 'Counter',
+    setup() {
+        const { state } = useContext();
+
+        return () => <div>{state.count}</div>;
+    },
+});
+
+const App = defineComponent({
+    name: 'App',
+    setup() {
+        return () => (
+            <ContextProvider>
+                <AddButton />
+                <Counter />
+                <MinusButton />
+            </ContextProvider>
+        );
     },
 });
 ```
 
 ### Advanced
 
-1. Create a custom context.
-
-```ts
-// @/context.ts
+```tsx
+import { defineComponent, reactive, computed, toRefs } from 'vue';
 import { createContext } from 'vc-state';
-import { toRefs } from 'vue';
 
-interface AppContext {
-    count: number;
-}
-
-const initialContext: AppContext = {
-    count: 0,
-};
-
-const [appContext, useAppContext] = createContext(initialContext, (context, setContext) => {
-    //Define custom actions
-    function countIncrement() {
-        context.count++;
-    }
-
-    function setCount(count: number) {
-        setCount('count', count);
-    }
-
-    //You even can watch context here
-    const { count } = toRefs(context);
-    watchEffect(() => {
-        console.log('count value changed.', count.value);
+function useCounter() {
+    const state = reactive({
+        count: 0,
     });
 
-    //Will merge into appContext
-    return { countIncrement, setCount };
+    const add = () => state.count++;
+
+    const minus = () => state.count--;
+
+    return {
+        state,
+        add,
+        minus,
+    };
+}
+
+function useDoubleCounter(context: ReturnType<typeof useCounter>) {
+    const { count } = toRefs(context.state);
+
+    const doubleCount = computed(() => count.value * 2);
+
+    return {
+        doubleCount,
+    };
+}
+
+const [ContextProvider, useContext] = createContext(useCounter, useDoubleCounter);
+
+const AddButton = defineComponent({
+    name: 'AddButton',
+    setup() {
+        const { add } = useContext();
+
+        return () => <button onClick={add}>add</button>;
+    },
 });
 
-export { appContext, useAppContext };
-```
+const MinusButton = defineComponent({
+    name: 'MinusButton',
+    setup() {
+        const { minus } = useContext();
 
-2. Use custom actions in component
+        return () => <button onClick={minus}>minus</button>;
+    },
+});
 
-```tsx
-// Component.tsx
-import { defineComponent, toRefs } from 'vue';
-import { useAppContext } from '@/context';
+const Counter = defineComponent({
+    name: 'Counter',
+    setup() {
+        const { state, doubleCount } = useContext();
+
+        return () => (
+            <>
+                <div>normal: {state.count}</div>
+                <div>double: {doubleCount.value}</div>
+            </>
+        );
+    },
+});
 
 export default defineComponent({
+    name: 'App',
     setup() {
-        const { context: appContext, countIncrement, setCount } = useAppContext();
-
-        //If want to use a ref value, use `toRefs` to transform context.
-
-        //You can watch or watchEffect `count` now.
-        const { count } = toRefs(appContext);
-
-        watchEffect(() => {
-            console.log(count.value);
-        })
-
-        return () => {
-            return (
-                <>
-                    <div>{appContext.count}</div> {/* Show count */}
-                    <button onClick={countIncrement}><button> {/* Will add 1 to count */}
-                    <button onClick={() => setCount(appContext.count + 10)}><button> {/* Will add 10 to count */}
-                </>
-            );
-        };
+        return () => (
+            <ContextProvider>
+                <AddButton />
+                <Counter />
+                <MinusButton />
+            </ContextProvider>
+        );
     },
 });
 ```
 
-## API
-
-### createContext
-
-```ts
-function createContext<S extends Record<string, any>, Selectors extends MutationInit<S>[] = MutationInit<S>[]>(
-    initialContext: S,
-    ...mutations: Selectors
-): [DeepReadonly<State<S>>, () => Context<S, Selectors>];
-```
-
--   `initialContext` - A initial state in context
--   `mutations` - Any custom hooks in context
-
 ## License
 
-[MIT](LICENSE)
+[MIT](./LICENSE)
