@@ -1,2 +1,2 @@
 export * from './createContext';
-export * from './useState';
+export * from './interfaces';

@@ -1,26 +1,42 @@
-import { readonly } from 'vue';
-import { MutationInit, GlobalContextWrapper, ReadonlyState } from './interfaces';
-import { useState } from './useState';
+import { h, Fragment, provide, InjectionKey, inject, defineComponent, FunctionalComponent } from 'vue';
+import { Selector, Context } from './interfaces';
 
-export function createContext<S extends Record<string, any>, M extends MutationInit<S>[] = MutationInit<S>[]>(
-    initialContext: S,
-    ...mutations: M
-): [ReadonlyState<S>, GlobalContextWrapper<S, M>] {
-    const [context, setContext] = useState(initialContext);
+export function createContext<Props extends {}, Value extends Record<string, any>, Selectors extends Selector<Value>[]>(
+    useValue: (props: Props) => Value,
+    ...selectors: Selectors
+) {
+    const injectionKey: InjectionKey<Context<Value, Selectors>> = Symbol();
 
-    const registeredMutations = mutations.reduce((registered, mutation) => {
-        return Object.assign({}, registered, mutation.call(null, context, setContext));
-    }, Object.create(null));
+    const NO_PROVIDER = {};
 
-    const readonlyContext = readonly(context);
+    const ContextProvider: FunctionalComponent<Props> = (props, { slots }) => {
+        return h(
+            defineComponent({
+                name: 'Provider',
+                setup() {
+                    const context = useValue(props);
 
-    function useContext() {
-        return {
-            context: readonlyContext,
-            setContext,
-            ...registeredMutations,
-        };
+                    const hookContextValues = selectors.reduce((merged, selector) => {
+                        return Object.assign({}, merged, selector.call(null, context));
+                    }, Object.create(null));
+
+                    provide(injectionKey, Object.assign({}, context, hookContextValues));
+
+                    return () => h(Fragment, slots.default?.());
+                },
+            })
+        );
+    };
+
+    function dispatch() {
+        const context = inject(injectionKey, NO_PROVIDER) as Context<Value, Selectors>;
+
+        if (context === NO_PROVIDER) {
+            console.warn('[vc-state] The ContextProvider is never used.');
+        }
+
+        return context;
     }
 
-    return [readonlyContext, useContext];
+    return [ContextProvider, dispatch] as const;
 }
