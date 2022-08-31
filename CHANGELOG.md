@@ -1,3 +1,7 @@
+## v1.0.0
+
+-   🚀 createContext using Provider Component and context dispatcher
+
 ## v0.1.1
 
 ### types
