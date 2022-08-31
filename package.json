@@ -1,15 +1,15 @@
 {
     "name": "vc-state",
-    "version": "0.1.1",
-    "description": "A minify local state by using vue composition api",
+    "version": "1.0.0",
+    "description": "Managing context by using composable api",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
     "unpkg": "dist/vc-state.min.js",
     "browser": "dist/vc-state.min.js",
     "typings": "dist/index.d.ts",
     "scripts": {
-        "dev": "rollup -w -c rollup.config.ts",
-        "build": "rollup -c rollup.config.ts"
+        "dev": "rimraf dist && rollup -w -c rollup.config.ts",
+        "build": "rimraf dist && rollup -c rollup.config.ts"
     },
     "files": [
         "dist"
@@ -23,6 +23,10 @@
         "state",
         "store",
         "vuex",
+        "provide",
+        "inject",
+        "hooks",
+        "composable",
         "reactive",
         "context"
     ],
@@ -32,35 +36,21 @@
         "url": "https://github.com/fanhaoyuan/vc-state/issues"
     },
     "homepage": "https://github.com/fanhaoyuan/vc-state#readme",
-    "gitHooks": {
-        "commit-msg": "cmv",
-        "pre-commit": "lint-staged"
-    },
-    "lint-staged": {
-        "*.{js,ts,md,json,yml}": [
-            "prettier --write"
-        ],
-        "*.{js,ts}": [
-            "eslint"
-        ]
-    },
     "devDependencies": {
-        "@fansy/commit-msg-validator": "^1.0.0",
         "@fansy/eslint-config": "^1.0.0",
         "@fansy/prettier-config": "^1.0.0",
-        "@rollup/plugin-commonjs": "^21.0.1",
-        "@rollup/plugin-node-resolve": "^13.1.1",
-        "@vue/runtime-core": "^3.2.26",
-        "@vue/runtime-dom": "^3.2.26",
+        "@rollup/plugin-commonjs": "^22.0.2",
+        "@rollup/plugin-node-resolve": "^13.3.0",
+        "@vue/runtime-core": "^3.2.38",
+        "@vue/runtime-dom": "^3.2.38",
         "esbuild": "^0.14.8",
-        "lint-staged": "^12.1.4",
         "rimraf": "^3.0.2",
-        "rollup": "^2.62.0",
+        "rollup": "^2.79.0",
+        "rollup-plugin-bundle-size": "^1.0.3",
         "rollup-plugin-dts": "^4.1.0",
         "rollup-plugin-esbuild": "^4.8.1",
         "typescript": "^4.5.4",
-        "vue": "^3.0.0",
-        "yorkie": "^2.0.0"
+        "vue": "^3.0.0"
     },
     "peerDependencies": {
         "vue": ">=3.0.0"

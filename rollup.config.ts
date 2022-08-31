@@ -1,20 +1,18 @@
 import { defineConfig } from 'rollup';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import esbuild, { minify } from 'rollup-plugin-esbuild';
+import nodeResolver from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import dts from 'rollup-plugin-dts';
 import { module, main, browser, typings } from './package.json';
-import rm from 'rimraf';
+import bundleSize from 'rollup-plugin-bundle-size';
 
-const input = 'index.ts';
+const input = 'src/index.ts';
 const external = ['vue'];
-
-rm.sync('dist');
 
 export default defineConfig([
     {
         input,
-        plugins: [nodeResolve(), commonjs(), esbuild({ target: 'esnext' })],
+        plugins: [nodeResolver(), commonjs(), esbuild()],
         external,
         output: [
             {
@@ -24,12 +22,11 @@ export default defineConfig([
             {
                 format: 'cjs',
                 file: main,
-                exports: 'auto',
             },
             {
                 format: 'umd',
                 file: browser,
-                plugins: [minify()],
+                plugins: [minify(), bundleSize()],
                 globals: {
                     vue: 'Vue',
                 },
