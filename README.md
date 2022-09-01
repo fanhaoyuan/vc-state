@@ -8,7 +8,7 @@ Managing context by using composable api
 
 </div>
 
-# Examples
+## Examples
 
 -   [ThemeContextProvider](https://codesandbox.io/s/github/fanhaoyuan/vc-state/tree/master/examples/theme-context-provider)
 
