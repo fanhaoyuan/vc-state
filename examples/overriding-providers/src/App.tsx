@@ -9,7 +9,6 @@ interface ThemeContextProviderProps {
     darkColor?: string;
 }
 
-// Defined Required Props in useValue function
 const [ThemeContextProvider, useThemeContext] = createContext((props: ThemeContextProviderProps) => {
     const theme = ref<Theme>(props.defaultTheme);
     const toggleTheme = () => (theme.value = theme.value === 'dark' ? 'light' : 'dark');
@@ -59,9 +58,18 @@ export default defineComponent({
     name: 'App',
     setup() {
         return () => (
-            // defaultTheme is required
-            // lightColor and darkColor are optional
-            <ThemeContextProvider defaultTheme='light'>
+            // useContext receives the provided value of the nearest Provider
+            <ThemeContextProvider defaultTheme='dark'>
+                <ThemeContextProvider defaultTheme='light'>
+                    <Panel />
+                    <Button />
+                </ThemeContextProvider>
+
+                <ThemeContextProvider defaultTheme='dark'>
+                    <Panel />
+                    <Button />
+                </ThemeContextProvider>
+
                 <Panel />
                 <Button />
             </ThemeContextProvider>

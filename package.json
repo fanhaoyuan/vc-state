@@ -1,7 +1,7 @@
 {
     "name": "vc-state",
     "version": "1.0.0",
-    "description": "Managing context by using composable api",
+    "description": "Easily to compose scoped state in Vue.js",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
     "unpkg": "dist/vc-state.min.js",

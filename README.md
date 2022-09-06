@@ -1,16 +1,18 @@
 <div align="center">
 <h1>vc-state</h1>
 
-Managing context by using composable api
+Easily to compose scoped state in Vue.js
 
-[![](https://data.jsdelivr.com/v1/package/npm/vc-state/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vc-state)
+<a href="https://unpkg.com/vc-state"><img alt="Size" src="https://img.badgesize.io/https://unpkg.com/vc-state"></a>
 <a href="https://npmjs.com/package/vc-state"><img src="https://img.shields.io/npm/v/vc-state.svg" alt="npm package"></a>
 
 </div>
 
-## Examples
+## Examples in CodeSandbox
 
 -   [ThemeContextProvider](https://codesandbox.io/s/github/fanhaoyuan/vc-state/tree/master/examples/theme-context-provider)
+-   [OverridingProviders](https://codesandbox.io/s/github/fanhaoyuan/vc-state/tree/master/examples/overriding-providers)
+-   [NestedProviders](https://codesandbox.io/s/github/fanhaoyuan/vc-state/tree/master/examples/nested-providers)
 
 ## Install
 
@@ -32,136 +34,63 @@ Managing context by using composable api
 <script src="https://cdn.jsdelivr.net/npm/vc-state/dist/vc-state.min.js"></script>
 ```
 
-## Usage
-
-### Basic
+## Basic Usage Examples (ThemeContextProvider)
 
 ```tsx
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { createContext } from 'vc-state';
 
-function useCounter() {
-    const state = reactive({
-        count: 0,
-    });
+type Theme = 'dark' | 'light';
 
-    const add = () => state.count++;
-
-    const minus = () => state.count--;
-
-    return {
-        state,
-        add,
-        minus,
-    };
+interface ThemeContextProviderProps {
+    defaultTheme: Theme;
+    lightColor?: string;
+    darkColor?: string;
 }
 
-const [ContextProvider, useContext] = createContext(useCounter);
+// Defined Required Props in useValue function
+const [ThemeContextProvider, useThemeContext] = createContext((props: ThemeContextProviderProps) => {
+    const theme = ref<Theme>(props.defaultTheme);
+    const toggleTheme = () => (theme.value = theme.value === 'dark' ? 'light' : 'dark');
+    return { theme, toggleTheme };
+});
 
-const AddButton = defineComponent({
-    name: 'AddButton',
+const Button = defineComponent({
+    name: 'Button',
     setup() {
-        const { add } = useContext();
-
-        return () => <button onClick={add}>add</button>;
+        const { toggleTheme, theme } = useThemeContext();
+        return () => {
+            return <button onClick={toggleTheme}>to {theme.value === 'dark' ? 'light' : 'dark'}</button>;
+        };
     },
 });
 
-const MinusButton = defineComponent({
-    name: 'MinusButton',
+const Panel = defineComponent({
+    name: 'Panel',
     setup() {
-        const { minus } = useContext();
+        const { theme } = useThemeContext();
+        const currentThemeColor = computed(() => (theme.value === 'dark' ? '#000' : '#fff'));
+        const oppositeThemeColor = computed(() => (theme.value === 'dark' ? '#fff' : '#000'));
 
-        return () => <button onClick={minus}>minus</button>;
-    },
-});
-
-const Counter = defineComponent({
-    name: 'Counter',
-    setup() {
-        const { state } = useContext();
-
-        return () => <div>{state.count}</div>;
-    },
-});
-
-const App = defineComponent({
-    name: 'App',
-    setup() {
-        return () => (
-            <ContextProvider>
-                <AddButton />
-                <Counter />
-                <MinusButton />
-            </ContextProvider>
-        );
-    },
-});
-```
-
-### Advanced
-
-```tsx
-import { defineComponent, reactive, computed, toRefs } from 'vue';
-import { createContext } from 'vc-state';
-
-function useCounter() {
-    const state = reactive({
-        count: 0,
-    });
-
-    const add = () => state.count++;
-
-    const minus = () => state.count--;
-
-    return {
-        state,
-        add,
-        minus,
-    };
-}
-
-function useDoubleCounter(context: ReturnType<typeof useCounter>) {
-    const { count } = toRefs(context.state);
-
-    const doubleCount = computed(() => count.value * 2);
-
-    return {
-        doubleCount,
-    };
-}
-
-const [ContextProvider, useContext] = createContext(useCounter, useDoubleCounter);
-
-const AddButton = defineComponent({
-    name: 'AddButton',
-    setup() {
-        const { add } = useContext();
-
-        return () => <button onClick={add}>add</button>;
-    },
-});
-
-const MinusButton = defineComponent({
-    name: 'MinusButton',
-    setup() {
-        const { minus } = useContext();
-
-        return () => <button onClick={minus}>minus</button>;
-    },
-});
-
-const Counter = defineComponent({
-    name: 'Counter',
-    setup() {
-        const { state, doubleCount } = useContext();
-
-        return () => (
-            <>
-                <div>normal: {state.count}</div>
-                <div>double: {doubleCount.value}</div>
-            </>
-        );
+        return () => {
+            return (
+                <div
+                    style={{
+                        backgroundColor: currentThemeColor.value,
+                        border: `1px ${oppositeThemeColor.value} solid`,
+                        width: '300px',
+                        height: '300px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '20px',
+                        color: oppositeThemeColor.value,
+                    }}
+                >
+                    <p>I'm in {theme.value} mode</p>
+                </div>
+            );
+        };
     },
 });
 
@@ -169,14 +98,70 @@ export default defineComponent({
     name: 'App',
     setup() {
         return () => (
-            <ContextProvider>
-                <AddButton />
-                <Counter />
-                <MinusButton />
-            </ContextProvider>
+            // defaultTheme is required
+            // lightColor and darkColor are optional
+            <ThemeContextProvider defaultTheme='light'>
+                <Panel />
+                <Button />
+            </ThemeContextProvider>
         );
     },
 });
+```
+
+## API
+
+### createContext
+
+`createContext(useValue[, ...hooks]): Context`
+
+It will return a context which compose with `initial context` and `patch context`
+
+#### useValue
+
+This is required in a `createContext`.
+
+This function returns an object which is `initial context`.
+
+```ts
+import { createContext } from 'vc-state';
+
+const context = createContext((props: { a: string }) => {
+    return {
+        b: '',
+    };
+});
+
+// In Vue Components
+console.log(context.useContext()); //  { b: '' }
+```
+
+#### hooks
+
+`Hooks` is a group of optional functions in `createContext`.
+
+It receives `initial context` in the first parameter. And it will return a object which is `patch context`, it Will compose with `initial context`.
+
+```ts
+import { createContext } from 'vc-state';
+
+const context = createContext(
+    (props: { a: string }) => {
+        return {
+            b: '',
+        };
+    },
+    initialContext => {
+        console.log(initialContext.b); // ''
+
+        return {
+            c: 1,
+        };
+    }
+);
+
+// In Vue Components
+console.log(context.useContext()); //  { b: '', c: 1 }
 ```
 
 ## License
