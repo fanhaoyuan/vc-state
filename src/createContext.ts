@@ -1,5 +1,5 @@
-import { h, Fragment, provide, InjectionKey, inject, defineComponent, FunctionalComponent } from 'vue';
-import { Selector, Context } from './interfaces';
+import { h, Fragment, provide, InjectionKey, inject, defineComponent } from 'vue';
+import { Selector, Context, VContextProvider } from './interfaces';
 
 /**
  * Compose context with hooks
@@ -15,7 +15,7 @@ export function createContext<
 
     const NO_PROVIDER = {};
 
-    const ContextProvider: FunctionalComponent<Props> = (props, { slots }) => {
+    const ContextProvider: VContextProvider<Props> = (props, { slots }) => {
         return h(
             defineComponent({
                 name: 'Provider',

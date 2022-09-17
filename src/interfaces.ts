@@ -1,3 +1,5 @@
+import { FunctionalComponent } from 'vue';
+
 export type Selector<Value extends Record<string, any>, Props extends {}> = (
     initialContext: Value,
     props: Props
@@ -26,3 +28,5 @@ export type Context<
     Props extends {},
     Selectors extends Selector<Value, Props>[]
 > = Value & MergeContext<DefineContext<Value, Props, Selectors>>;
+
+export type VContextProvider<Props extends {}> = FunctionalComponent<Props, {}>;
