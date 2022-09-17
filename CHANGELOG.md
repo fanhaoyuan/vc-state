@@ -1,3 +1,7 @@
+## Coming Soon
+
+-  🚀 Can read props in hooks selector
+
 ## v1.0.0
 
 -   🚀 createContext using Provider Component and context dispatcher
