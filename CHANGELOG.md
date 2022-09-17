@@ -1,6 +1,7 @@
-## Coming Soon
+## v1.1.0
 
--  🚀 Can read props in hooks selector
+-   🚀 Can read props in hooks selector
+-   🔧 add `VContextProvider` alias to `FunctionalComponent`
 
 ## v1.0.0
 
