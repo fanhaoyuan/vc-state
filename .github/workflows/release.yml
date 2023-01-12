@@ -6,29 +6,32 @@ on:
             - 'v*'
 
 jobs:
-    tag-release:
+    release:
         runs-on: ubuntu-latest
         steps:
-            - name: Create GitHub Release By Push Tag
+            - name: Create GitHub release
               uses: Roang-zero1/github-create-release-action@master
               with:
                   version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+                  release_title: ${{ github.ref_name }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-    npm-deploy:
+    deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
 
             - uses: pnpm/action-setup@v2.0.1
               with:
-                  version: 6.20.3
+                  version: 7
 
             - uses: actions/setup-node@v2
               with:
-                  node-version: ${{ matrix.node_version }}
+                  node-version: 18
                   cache: 'pnpm'
+              env:
+                  NPM_TOKEN: ${{secrets.NPM_TOKEN}}
 
             - run: pnpm install
 
@@ -36,6 +39,6 @@ jobs:
 
             - run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
-            - run: npm publish
+            - run: pnpm publish
               env:
                   NPM_TOKEN: ${{secrets.NPM_TOKEN}}
