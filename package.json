@@ -9,7 +9,8 @@
     "typings": "dist/index.d.ts",
     "scripts": {
         "dev": "rimraf dist && rollup -w -c rollup.config.ts",
-        "build": "rimraf dist && rollup -c rollup.config.ts"
+        "build": "rimraf dist && rollup -c rollup.config.ts",
+        "deploy": "pnpm run build && pnpm publish --no-git-check"
     },
     "files": [
         "dist"
