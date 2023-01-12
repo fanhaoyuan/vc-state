@@ -1,3 +1,7 @@
+## v1.2.0
+
+-   🚀 Allows custom displayName for `Provider` ([#2](https://github.com/fanhaoyuan/vc-state/pull/2))
+
 ## v1.1.0
 
 -   🚀 Can read props in hooks selector
