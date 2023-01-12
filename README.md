@@ -164,6 +164,26 @@ const context = createContext(
 console.log(context.useContext()); //  { b: '', c: 1 }
 ```
 
+### displayName
+
+We can set custom displayName in `vue-tools` for `Provider`. Default is `Provider`.
+
+Added in `v1.2.0`.
+
+```ts
+import { createContext } from 'vc-state';
+
+const [ContextProvider, useThemeContext] = createContext(() => {
+    return {
+        // context
+    };
+});
+
+ContextProvider.displayName = 'ThemeContextProvider';
+
+export { ContextProvider, useThemeContext };
+```
+
 ## License
 
 [MIT](./LICENSE)
