@@ -18,7 +18,7 @@ export function createContext<
     const ContextProvider: VContextProvider<Props> = (props, { slots }) => {
         return h(
             defineComponent({
-                name: 'Provider',
+                name: ContextProvider.displayName || 'Provider',
                 setup() {
                     const initialContext = useValue(props);
 
